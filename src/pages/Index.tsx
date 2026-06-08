@@ -29,7 +29,89 @@ const playCashRegister = () => {
 
 type Operation = "+" | "-" | null;
 type PayMethod = "card" | "qr" | "cash" | "mir" | null;
-type Screen = "calc" | "pay" | "success";
+type Screen = "pin" | "calc" | "pay" | "success";
+
+const CORRECT_PIN = "0000";
+
+const PinScreen = ({ onSuccess }: { onSuccess: () => void }) => {
+  const [pin, setPin] = useState("");
+  const [error, setError] = useState(false);
+  const [shake, setShake] = useState(false);
+
+  const handleDigit = (d: string) => {
+    if (pin.length >= 4) return;
+    const next = pin + d;
+    setPin(next);
+    setError(false);
+    if (next.length === 4) {
+      setTimeout(() => {
+        if (next === CORRECT_PIN) {
+          onSuccess();
+        } else {
+          setShake(true);
+          setError(true);
+          setTimeout(() => { setPin(""); setShake(false); }, 600);
+        }
+      }, 120);
+    }
+  };
+
+  const handleDel = () => setPin((p) => p.slice(0, -1));
+
+  return (
+    <div className="min-h-screen bg-cash-bg font-golos flex items-center justify-center p-4">
+      <div className="w-full max-w-[320px] flex flex-col items-center animate-slide-up">
+        <div className="w-14 h-14 rounded-2xl bg-cash-surface border border-cash-border flex items-center justify-center mb-6 shadow-sm">
+          <Icon name="Lock" size={24} className="text-cash-muted" />
+        </div>
+        <p className="text-cash-text text-lg font-semibold mb-1">Введите PIN</p>
+        <p className="text-cash-muted text-sm mb-8">Для доступа к кассе</p>
+
+        <div className={`flex gap-4 mb-10 ${shake ? "animate-[wiggle_0.4s_ease-in-out]" : ""}`}>
+          {[0, 1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className={`w-4 h-4 rounded-full border-2 transition-all duration-150 ${
+                pin.length > i
+                  ? error ? "bg-red-400 border-red-400" : "bg-cash-accent border-cash-accent"
+                  : "border-cash-border bg-transparent"
+              }`}
+            />
+          ))}
+        </div>
+
+        {error && (
+          <p className="text-red-500 text-sm mb-6 -mt-6 animate-fade-in">Неверный PIN</p>
+        )}
+
+        <div className="grid grid-cols-3 gap-3 w-full">
+          {["1","2","3","4","5","6","7","8","9"].map((d) => (
+            <button
+              key={d}
+              onClick={() => handleDigit(d)}
+              className="h-16 rounded-xl bg-cash-surface border border-cash-border text-cash-text text-xl font-medium hover:bg-gray-50 active:scale-95 transition-all duration-100"
+            >
+              {d}
+            </button>
+          ))}
+          <div />
+          <button
+            onClick={() => handleDigit("0")}
+            className="h-16 rounded-xl bg-cash-surface border border-cash-border text-cash-text text-xl font-medium hover:bg-gray-50 active:scale-95 transition-all duration-100"
+          >
+            0
+          </button>
+          <button
+            onClick={handleDel}
+            className="h-16 rounded-xl bg-cash-surface border border-cash-border text-cash-muted text-lg hover:bg-gray-50 active:scale-95 transition-all duration-100"
+          >
+            ⌫
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface HistoryItem {
   expression: string;
@@ -110,7 +192,7 @@ export default function Index() {
   const [waitingNext, setWaitingNext] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [expression, setExpression] = useState("");
-  const [screen, setScreen] = useState<Screen>("calc");
+  const [screen, setScreen] = useState<Screen>("pin");
   const [selectedMethod, setSelectedMethod] = useState<PayMethod>(null);
 
   const handleDigit = useCallback(
@@ -219,6 +301,10 @@ export default function Index() {
         : "text-5xl";
 
   const totalAmount = display !== "0" ? formatDisplay(display) : null;
+
+  if (screen === "pin") {
+    return <PinScreen onSuccess={() => setScreen("calc")} />;
+  }
 
   if (screen === "success") {
     const method = PAY_METHODS.find((m) => m.id === selectedMethod);

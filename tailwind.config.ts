@@ -83,6 +83,13 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
+				'wiggle': {
+					'0%, 100%': { transform: 'translateX(0)' },
+					'20%': { transform: 'translateX(-8px)' },
+					'40%': { transform: 'translateX(8px)' },
+					'60%': { transform: 'translateX(-6px)' },
+					'80%': { transform: 'translateX(6px)' },
+				},
 				'press': {
 					'0%': { transform: 'scale(1)' },
 					'50%': { transform: 'scale(0.93)' },
@@ -119,6 +126,7 @@ export default {
 				'press': 'press 0.15s ease-out',
 				'fade-in': 'fade-in 0.3s ease-out',
 				'slide-up': 'slide-up 0.4s ease-out',
+				'wiggle': 'wiggle 0.4s ease-in-out',
 			}
 		}
 	},
