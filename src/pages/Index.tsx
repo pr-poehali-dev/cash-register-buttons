@@ -31,7 +31,7 @@ type Operation = "+" | "-" | null;
 type PayMethod = "card" | "qr" | "cash" | "mir" | null;
 type Screen = "pin" | "calc" | "pay" | "success";
 
-const CORRECT_PIN = "0000";
+const CORRECT_PIN = "5555";
 
 const PinScreen = ({ onSuccess }: { onSuccess: () => void }) => {
   const [pin, setPin] = useState("");
