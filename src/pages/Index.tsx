@@ -39,7 +39,7 @@ const playScan = () => {
 // --- Types ---
 type Operation = "+" | "-" | null;
 type PayMethod = "card" | "qr" | "cash" | "mir" | null;
-type Screen = "pin" | "calc" | "pay" | "success" | "products" | "scanner";
+type Screen = "pin" | "calc" | "pay" | "success" | "products" | "products-new" | "scanner";
 
 interface Product {
   id: string;
@@ -144,12 +144,12 @@ const PAY_METHODS = [
 ];
 
 // --- Products Manager ---
-const ProductsScreen = ({ products, onSave, onBack }: {
-  products: Product[]; onSave: (p: Product[]) => void; onBack: () => void;
+const ProductsScreen = ({ products, onSave, onBack, autoAdd = false }: {
+  products: Product[]; onSave: (p: Product[]) => void; onBack: () => void; autoAdd?: boolean;
 }) => {
   const [list, setList] = useState<Product[]>(products);
   const [form, setForm] = useState({ name: "", price: "", barcode: "" });
-  const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState(autoAdd);
 
   const handleAdd = () => {
     if (!form.name || !form.price) return;
@@ -384,6 +384,7 @@ export default function Index() {
   if (screen === "pin") return <PinScreen onSuccess={() => setScreen("calc")} />;
 
   if (screen === "products") return <ProductsScreen products={products} onSave={setProducts} onBack={() => setScreen("calc")} />;
+  if (screen === "products-new") return <ProductsScreen products={products} onSave={setProducts} onBack={() => setScreen("calc")} autoAdd />;
 
   if (screen === "scanner") return <ScannerScreen products={products} onScanned={(p) => { addToCart(p); setScreen("calc"); }} onBack={() => setScreen("calc")} />;
 
@@ -518,11 +519,18 @@ export default function Index() {
           )}
         </div>
 
-        <button onClick={() => setScreen("scanner")}
-          className="w-full h-12 mb-3 rounded-xl border-2 border-dashed border-cash-border text-cash-muted hover:border-cash-accent hover:text-cash-accent active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2 text-sm font-medium">
-          <Icon name="ScanLine" size={18} />
-          Сканировать товар
-        </button>
+        <div className="flex gap-2 mb-3">
+          <button onClick={() => setScreen("scanner")}
+            className="flex-1 h-12 rounded-xl border-2 border-dashed border-cash-border text-cash-muted hover:border-cash-accent hover:text-cash-accent active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2 text-sm font-medium">
+            <Icon name="ScanLine" size={16} />
+            Сканировать
+          </button>
+          <button onClick={() => setScreen("products-new")}
+            className="flex-1 h-12 rounded-xl border-2 border-dashed border-cash-border text-cash-muted hover:border-green-400 hover:text-green-600 active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2 text-sm font-medium">
+            <Icon name="Plus" size={16} />
+            Создать товар
+          </button>
+        </div>
 
         <div className="grid grid-cols-4 gap-2 mb-3">
           <CashButton onClick={() => handleDigit("7")}>7</CashButton>
