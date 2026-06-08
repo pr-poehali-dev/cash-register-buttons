@@ -303,6 +303,7 @@ export default function Index() {
   const [products, setProducts] = useState<Product[]>(DEFAULT_PRODUCTS);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [confirmClose, setConfirmClose] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const cartTotal = cart.reduce((sum, i) => sum + i.product.price * i.qty, 0);
 
@@ -467,15 +468,12 @@ export default function Index() {
           <div className="flex items-center justify-between mb-3">
             <p className="text-cash-muted text-[11px] font-mono tracking-widest uppercase">Касса</p>
             <div className="flex items-center gap-3">
-              <button onClick={() => setScreen("products")} className="text-cash-muted hover:text-cash-text transition-colors" title="Товары">
-                <Icon name="Package" size={16} />
-              </button>
-              <button onClick={() => setConfirmClose(true)} className="text-cash-muted hover:text-red-400 transition-colors" title="Закрыть смену">
-                <Icon name="LogOut" size={16} />
-              </button>
               <p className="text-cash-muted text-[11px] font-mono">
                 {new Date().toLocaleDateString("ru-RU", { day: "2-digit", month: "short", year: "numeric" })}
               </p>
+              <button onClick={() => setDrawerOpen(true)} className="text-cash-muted hover:text-cash-text transition-colors">
+                <Icon name="Menu" size={18} />
+              </button>
             </div>
           </div>
           <div className="h-px bg-cash-border" />
@@ -563,6 +561,41 @@ export default function Index() {
         <div className="mt-5 h-px bg-cash-border" />
         <p className="text-center text-cash-muted text-[10px] font-mono mt-3 tracking-[0.2em] uppercase">Версия 1.0</p>
       </div>
+
+      {/* Drawer */}
+      {drawerOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          <div className="absolute inset-0 bg-black/40 animate-fade-in" onClick={() => setDrawerOpen(false)} />
+          <div className="relative ml-auto w-[260px] h-full bg-cash-surface flex flex-col shadow-2xl"
+            style={{ animation: "slideInRight 0.25s ease-out" }}>
+            <div className="flex items-center justify-between px-5 pt-6 pb-4 border-b border-cash-border">
+              <p className="text-cash-text font-semibold text-sm">Меню</p>
+              <button onClick={() => setDrawerOpen(false)} className="text-cash-muted hover:text-cash-text transition-colors">
+                <Icon name="X" size={18} />
+              </button>
+            </div>
+            <div className="flex flex-col gap-1 p-3 flex-1">
+              <button onClick={() => { setDrawerOpen(false); setScreen("products"); }}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-cash-text hover:bg-gray-50 transition-colors text-sm font-medium">
+                <Icon name="Package" size={18} className="text-cash-muted" />
+                Товары
+              </button>
+              <button onClick={() => { setDrawerOpen(false); setScreen("scanner"); }}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-cash-text hover:bg-gray-50 transition-colors text-sm font-medium">
+                <Icon name="ScanLine" size={18} className="text-cash-muted" />
+                Сканировать товар
+              </button>
+            </div>
+            <div className="p-3 border-t border-cash-border">
+              <button onClick={() => { setDrawerOpen(false); setConfirmClose(true); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors text-sm font-medium">
+                <Icon name="LogOut" size={18} />
+                Закрыть смену
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {confirmClose && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">

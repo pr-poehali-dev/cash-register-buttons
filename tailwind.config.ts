@@ -83,6 +83,10 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
+				'slideInRight': {
+					from: { transform: 'translateX(100%)' },
+					to: { transform: 'translateX(0)' },
+				},
 				'wiggle': {
 					'0%, 100%': { transform: 'translateX(0)' },
 					'20%': { transform: 'translateX(-8px)' },
