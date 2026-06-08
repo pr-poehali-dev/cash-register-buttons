@@ -303,6 +303,7 @@ export default function Index() {
   const [products, setProducts] = useState<Product[]>(DEFAULT_PRODUCTS);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [confirmClose, setConfirmClose] = useState(false);
 
   const cartTotal = cart.reduce((sum, i) => sum + i.product.price * i.qty, 0);
 
@@ -585,12 +586,43 @@ export default function Index() {
                 Сканировать товар
               </button>
             </div>
-
+            <div className="p-3 border-t border-cash-border">
+              <button onClick={() => { setDrawerOpen(false); setConfirmClose(true); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors text-sm font-medium">
+                <Icon name="LogOut" size={18} />
+                Закрыть смену
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-
+      {confirmClose && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-cash-surface rounded-2xl p-6 w-full max-w-[300px] shadow-xl animate-slide-up">
+            <div className="w-12 h-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center mx-auto mb-4">
+              <Icon name="LogOut" size={22} className="text-red-500" />
+            </div>
+            <p className="text-cash-text font-semibold text-center mb-1">Закрыть смену?</p>
+            <p className="text-cash-muted text-sm text-center mb-6">Касса будет заблокирована до следующего входа</p>
+            <div className="flex gap-2">
+              <button onClick={() => setConfirmClose(false)}
+                className="flex-1 h-11 rounded-xl border border-cash-border text-cash-muted text-sm hover:bg-gray-50 transition-colors">
+                Отмена
+              </button>
+              <button onClick={() => {
+                setConfirmClose(false);
+                setDisplay("0"); setFirstNumber(null); setOperation(null);
+                setWaitingNext(false); setExpression(""); setCart([]);
+                setScreen("pin");
+              }}
+                className="flex-1 h-11 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors">
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
