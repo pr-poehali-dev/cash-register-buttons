@@ -4,6 +4,14 @@
 
 @layer base {
   :root {
+    --cash-bg: 0 0% 97%;
+    --cash-surface: 0 0% 100%;
+    --cash-border: 0 0% 88%;
+    --cash-text: 0 0% 8%;
+    --cash-muted: 0 0% 52%;
+    --cash-accent: 0 0% 10%;
+    --cash-cancel: 4 80% 52%;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 

@@ -7,6 +7,7 @@ export default {
 		"./components/**/*.{ts,tsx}",
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
+			"./1780913568706498003.html"
 	],
 	prefix: "",
 	theme: {
@@ -18,7 +19,20 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'golos': ['Golos Text', 'sans-serif'],
+				'mono': ['JetBrains Mono', 'monospace'],
+			},
 			colors: {
+				cash: {
+					bg: 'hsl(var(--cash-bg))',
+					surface: 'hsl(var(--cash-surface))',
+					border: 'hsl(var(--cash-border))',
+					text: 'hsl(var(--cash-text))',
+					muted: 'hsl(var(--cash-muted))',
+					accent: 'hsl(var(--cash-accent))',
+					cancel: 'hsl(var(--cash-cancel))',
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -69,6 +83,19 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
+				'press': {
+					'0%': { transform: 'scale(1)' },
+					'50%': { transform: 'scale(0.93)' },
+					'100%': { transform: 'scale(1)' },
+				},
+				'fade-in': {
+					from: { opacity: '0', transform: 'translateY(6px)' },
+					to: { opacity: '1', transform: 'translateY(0)' },
+				},
+				'slide-up': {
+					from: { opacity: '0', transform: 'translateY(20px)' },
+					to: { opacity: '1', transform: 'translateY(0)' },
+				},
 				'accordion-down': {
 					from: {
 						height: '0'
@@ -88,7 +115,10 @@ export default {
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'press': 'press 0.15s ease-out',
+				'fade-in': 'fade-in 0.3s ease-out',
+				'slide-up': 'slide-up 0.4s ease-out',
 			}
 		}
 	},
