@@ -1,6 +1,32 @@
 import { useState, useCallback } from "react";
 import Icon from "@/components/ui/icon";
 
+const playCashRegister = () => {
+  const AudioCtx = window.AudioContext || (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioCtx) return;
+  const ctx = new AudioCtx();
+
+  const bell = (freq: number, startTime: number, duration: number, gain: number) => {
+    const osc = ctx.createOscillator();
+    const env = ctx.createGain();
+    osc.connect(env);
+    env.connect(ctx.destination);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, startTime);
+    env.gain.setValueAtTime(0, startTime);
+    env.gain.linearRampToValueAtTime(gain, startTime + 0.01);
+    env.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+    osc.start(startTime);
+    osc.stop(startTime + duration);
+  };
+
+  const t = ctx.currentTime;
+  bell(1318, t, 0.5, 0.4);
+  bell(1760, t + 0.07, 0.45, 0.3);
+  bell(2637, t + 0.13, 0.6, 0.2);
+  bell(1318, t + 0.22, 0.35, 0.15);
+};
+
 type Operation = "+" | "-" | null;
 type PayMethod = "card" | "qr" | "cash" | "mir" | null;
 type Screen = "calc" | "pay" | "success";
@@ -165,6 +191,7 @@ export default function Index() {
 
   const handlePayConfirm = () => {
     if (!selectedMethod) return;
+    playCashRegister();
     setScreen("success");
     setTimeout(() => {
       setDisplay("0");
