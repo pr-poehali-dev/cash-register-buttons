@@ -302,8 +302,8 @@ export default function Index() {
   const [selectedMethod, setSelectedMethod] = useState<PayMethod>(null);
   const [products, setProducts] = useState<Product[]>(DEFAULT_PRODUCTS);
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [confirmClose, setConfirmClose] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const cartTotal = cart.reduce((sum, i) => sum + i.product.price * i.qty, 0);
 
@@ -559,11 +559,6 @@ export default function Index() {
         </button>
 
         <div className="mt-5 h-px bg-cash-border" />
-        <button onClick={() => setConfirmClose(true)}
-          className="w-full mt-3 h-10 rounded-xl border border-red-200 text-red-400 text-sm font-medium hover:bg-red-50 transition-colors flex items-center justify-center gap-2">
-          <Icon name="LogOut" size={15} />
-          Закрыть смену
-        </button>
         <p className="text-center text-cash-muted text-[10px] font-mono mt-3 tracking-[0.2em] uppercase">Версия 1.0</p>
       </div>
 
